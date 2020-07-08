@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PinsControllsdzdezdeer!
+{% block title %}Pinterest
 {% endblock %}
 
 {% block body %}
@@ -19,7 +19,7 @@
 
 	<div class="example-wrapper">
 		<h1>Hello
-			{{ controller_name }}! ✅</h1>
+		</h1>
 
 		This friendly message is coming from:
 		<ul>
@@ -28,11 +28,20 @@
 					<a href="{{ '/Users/admin/Desktop/symfony-pinterest/src/Controller/PinsController.php'|file_link(0) }}">src/Controller/PinsController.php</a>
 				</code>
 			</li>
-			<li>Your template at
+			<li>Your template at the big boss
 				<code>
 					<a href="{{ '/Users/admin/Desktop/symfony-pinterest/templates/pins/index.html.twig'|file_link(0) }}">templates/pins/index.html.twig</a>
 				</code>
 			</li>
 		</ul>
+		<h1> {{ function_name(pins|length, 'pin', 'pins')}}</h1>
+		{% for pin in pins %}
+			<h1>
+				{{pin.title}}</h1>
+			<p>{{pin.description}}</p>
+
+		{% endfor %}
 	</div>
+
+
 {% endblock %}
