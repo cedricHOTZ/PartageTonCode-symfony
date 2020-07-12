@@ -8,6 +8,8 @@
 
 <h1>{{pin.title}}</h1>
 <p>{{pin.description}}</p>
+<p>Publié le {{pin.createdAt|date('d/m/Y') }}</p>
+<a href="{{path('edit', {id:pin.id}) }}">Editer</a>
 <a href="{{path('home')}}">Retour à la page d'accueil</a>
 </article>
 

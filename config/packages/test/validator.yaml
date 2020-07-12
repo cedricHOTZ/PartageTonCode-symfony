@@ -1,3 +1,7 @@
 framework:
     validation:
         not_compromised_password: false
+App\Entity\UserSettings:
+    properties:
+        timezone:
+            - Timezone: DateTimeZone::EUROPE
