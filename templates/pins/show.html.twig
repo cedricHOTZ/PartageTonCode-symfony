@@ -9,8 +9,16 @@
 <h1>{{pin.title}}</h1>
 <p>{{pin.description}}</p>
 <p>Publié le {{pin.createdAt|date('d/m/Y') }}</p>
-<a href="{{path('edit', {id:pin.id}) }}">Editer</a>
+<a href="{{path('edit', {id:pin.id}) }}">Editer |</a>
+<!-- suppresion du pin -->
+<a href="#" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();">Supprimer |</a>
 <a href="{{path('home')}}">Retour à la page d'accueil</a>
+<form id="js-form" action="{{path('delete',{id: pin.id}) }}" method="post" style="display:none;">
+<!-- jeton pour éviter la faille csrf lors de la suppresion du pin  -->
+<input type="hidden" name="csrf_token"  value="{{csrf_token('pins.delete' ~ pin.id) }}">
+<input type="hidden" name="_method" value="DELETE">
+</form> 
+
 </article>
 
  {% endblock %}
