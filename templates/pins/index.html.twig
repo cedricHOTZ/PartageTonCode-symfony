@@ -34,11 +34,14 @@
 				</code>
 			</li>
 		</ul>
-		<h1> {{ function_name(pins|length, 'pin', 'pins')}}</h1>
+		<h1>
+			{{ function_name(pins|length, 'pin', 'pins')}}</h1>
 		{% for pin in pins %}
-			<h1><a href="{{ path('show',{id: pin.id}) }}">
-				{{pin.title}}</a></h1>
-			<p>{{pin.description}}</p>
+			<h1>
+				<a href="{{ path('show',{id: pin.id}) }}">
+					{{pin.title}}</a>
+			</h1>
+			<p>{{pin.description|u.truncate(10,'...',false)}}</p>
 
 		{% endfor %}
 	</div>
