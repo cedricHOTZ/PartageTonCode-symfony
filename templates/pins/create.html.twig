@@ -2,10 +2,15 @@
 
 {% block title 'Création de pin'%}
 {% block body %}
+<div class="row">
+<div class="col-md-6 mx-auto">
 	<h1>création du pin</h1>
 	{{form_start(form)}}
 
 	{{form_widget(form)}}
+ 
 	<input type="submit" class="btn btn-primary btn-block"value="Valider" formnovalidate/>
 	{{ form_end(form) }}
+   </div>
+  </div>
 {% endblock %}

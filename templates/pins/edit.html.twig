@@ -4,14 +4,19 @@
 
 
 {% block body %}
+<div class="row">
+<div class="col-md-6 mx-auto">
 <article>
 
 <h1>Editer pin{{pin.id}}</h1>
 {{form_start(form)}}
 
 {{form_widget(form)}}
-<input type="submit" value="Modifier le pin"/>
+<input type="submit" class=" btn btn-primary btn-block"value="Modifier le pin"/>
 {{ form_end(form) }}
+
 </article>
+</div>
+</div>
 
  {% endblock %}

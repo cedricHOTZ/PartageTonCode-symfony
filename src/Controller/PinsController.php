@@ -77,6 +77,7 @@ class PinsController extends AbstractController
             // $em = $this->getDoctrine()->getManager();
            
             $em->flush();
+            $this->addFlash('success','Pin modifié avec success');
             return $this->redirectToRoute('home');
         }
            return $this->render('pins/edit.html.twig',[
@@ -107,6 +108,8 @@ class PinsController extends AbstractController
         // $em = $this->getDoctrine()->getManager();
         $em->persist($pin);
         $em->flush();
+
+        $this->addFlash('success','Pin ajouté avec success');
         return $this->redirectToRoute('home');
     }
         return $this->render('pins/create.html.twig',[
@@ -123,9 +126,13 @@ class PinsController extends AbstractController
         //dd($request->request->get('csrf_token'));
        
         //si le token est valid supression du pin
-        if($this->isCsrfTokenValid('delete'. $pin->getId(),$request->request->get('csrf_token'))){
+        if($this->isCsrfTokenValid('delete'. $pin->getId(),$request->request->get(' 
+        
+        
+        '))){
             $em->remove($pin);
             $em->flush();
+            $this->addFlash('info','Pin supprimé avec success');
         }
    
            
