@@ -1,0 +1,8 @@
+	<!-- Affichage des méssages d'alert -->
+		{% for type, messages in app.Flashes %}
+			{% for message in messages %}
+				<div role="alert" class="alert alert-{{type}}">
+					{{message}}
+				</div>
+			{% endfor %}
+		{% endfor %}
