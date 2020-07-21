@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PinRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PinRepository::class)
@@ -20,11 +21,15 @@ class Pin
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le titre est requis")
+     * @Assert\Length(min=2,minMessage="Il faut au minimum 2 caractères")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     *  @Assert\NotBlank
+     * @Assert\Length(min=10,minMessage="Il faut au minimum 10 caractères"))
      */
     private $description;
 
@@ -60,7 +65,7 @@ class Pin
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
