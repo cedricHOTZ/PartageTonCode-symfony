@@ -66,6 +66,7 @@ class PinsController extends AbstractController
 
         $form = $this->createForm(PinType::class, $pin,[
             'method' => 'PUT'
+            
         ]);
         $form->handleRequest($request);
 
@@ -77,7 +78,7 @@ class PinsController extends AbstractController
             // $em = $this->getDoctrine()->getManager();
            
             $em->flush();
-            $this->addFlash('success','Pin modifié avec success');
+            
             return $this->redirectToRoute('home');
         }
            return $this->render('pins/edit.html.twig',[
@@ -92,7 +93,7 @@ class PinsController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $pin = new Pin;
-     $form = $this->createForm(PinType::class,$pin);
+     $form = $this->createForm(PinType::class, $pin);
     //Plus besoin si on passe par la création du form avec createform et non createFormBuilder
     // ->add('title', TextType::class)
     //->add('description', TextareaType::class)
@@ -102,7 +103,7 @@ class PinsController extends AbstractController
     $form->handleRequest($request);
     if( $form->isSubmitted() && $form->isValid()){
       
-        $pin = $form->getData();
+        //$pin = $form->getData();
       
         // pour récupérer entité manager si pas d'injection de dépendance
         // $em = $this->getDoctrine()->getManager();
@@ -123,16 +124,12 @@ class PinsController extends AbstractController
     public function delete(Request $request,Pin $pin,EntityManagerInterface $em):response
     {
         //Affichage du token
-        //dd($request->request->get('csrf_token'));
+      //  dd($request->request->get('csrf_token'));
        
         //si le token est valid supression du pin
-        if($this->isCsrfTokenValid('delete'. $pin->getId(),$request->request->get(' 
-        
-        
-        '))){
+        if($this->isCsrfTokenValid('pins.delete'. $pin->getId(),$request->request->get('csrf_token'))){
             $em->remove($pin);
             $em->flush();
-            $this->addFlash('info','Pin supprimé avec success');
         }
    
            

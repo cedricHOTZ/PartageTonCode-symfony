@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity(repositoryClass=PinRepository::class)
  * @ORM\HasLifecycleCallbacks
+ * ORM\Table(name="pin")
  * @Vich\Uploadable
  */
 class Pin
@@ -39,18 +40,13 @@ class Pin
      /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      * 
-     * @Vich\UploadableField(mapping="pin_image", fileNameProperty="imageName", size="imageSize")
-     * 
+     * @Vich\UploadableField(mapping="pin_image", fileNameProperty="imageName")
+     * @Assert\Image(maxSize="8M", maxSizeMessage="L'image ne doit pas dépasser 8M")
+     * @Assert\NotNull(message="Veuillez charger une image")
      * @var File|null
      */
     private $imageFile;
 
-/**
-     * @ORM\Column(type="integer")
-     *
-     * @var int|null
-     */
-    private $imageSize;
 
     /**
      * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
@@ -142,7 +138,7 @@ class Pin
         if (null !== $imageFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->setUpdatedAt (new \DateTimeImmutable);
+            $this->setUpdatedAt(new \DateTimeImmutable);
         }
     }
 
@@ -151,15 +147,7 @@ class Pin
         return $this->imageFile;
     }
 
-    public function setImageSize(?int $imageSize): void
-    {
-        $this->imageSize = $imageSize;
-    }
-
-    public function getImageSize(): ?int
-    {
-        return $this->imageSize;
-    }
+   
 
     public function getImageName(): ?string
     {
