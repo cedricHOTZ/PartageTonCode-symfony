@@ -17,35 +17,30 @@
 		}
 	</style>
 
-	<div class="example-wrapper">
-		<h1>Hello
-		</h1>
 
-		This friendly message is coming from:
-		<ul>
-			<li>Your controller at
-				<code>
-					<a href="{{ '/Users/admin/Desktop/symfony-pinterest/src/Controller/PinsController.php'|file_link(0) }}">src/Controller/PinsController.php</a>
-				</code>
-			</li>
-			<li>Your template at the big boss
-				<code>
-					<a href="{{ '/Users/admin/Desktop/symfony-pinterest/templates/pins/index.html.twig'|file_link(0) }}">templates/pins/index.html.twig</a>
-				</code>
-			</li>
-		</ul>
+	{% if pins|length > 0 %}
 		<h1>
+			<!-- affiche le singulier ou pluriel de pin -->
 			{{ function_name(pins|length, 'pin', 'pins')}}</h1>
 		{% for pin in pins %}
-			<h1>
-				<a href="{{ path('show',{id: pin.id}) }}">
-					{{pin.title}}</a>
-			</h1>
-		
-			<p>{{pin.description|u.truncate(10,'...',false)}}</p>
-			<p>{{pin.createdAt|ago}}</p>
+			<article>
+				<img src="{{ vich_uploader_asset(pin)|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}"/>
+				<h1>
+					<a href="{{ path('show',{id: pin.id}) }}">
+						{{pin.title}}</a>
+				</h1>
+
+				<p>{{pin.description|u.truncate(10,'...',false)}}</p>
+				<p>{{pin.createdAt|ago}}</p>
+			</article>
 		{% endfor %}
-	</div>
+	{% else %}
+		<h2 class="text-center">
+			Aucun pin |
+			<a href="{{path('create') }}">
+				Créer le premié pin</a>
+		</h2>
+	{% endif %}
 
 
 {% endblock %}
