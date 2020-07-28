@@ -24,7 +24,7 @@
 			{{ function_name(pins|length, 'pin', 'pins')}}</h1>
 		{% for pin in pins %}
 			<article>
-				<img src="{{ vich_uploader_asset(pin)|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}"/>
+				<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}"/>
 				<h1>
 					<a href="{{ path('show',{id: pin.id}) }}">
 						{{pin.title}}</a>
