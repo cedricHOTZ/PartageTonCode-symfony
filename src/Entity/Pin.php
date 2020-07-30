@@ -62,11 +62,15 @@ class Pin
      */
     private $imageName;
 
+
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pins")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private $user;
+
+    
+  
 
     public function getId(): ?int
     {
@@ -166,15 +170,29 @@ class Pin
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getRelation(): ?User
     {
-        return $this->author;
+        return $this->relation;
     }
 
-    public function setAuthor(?User $author): self
+    public function setRelation(User $relation): self
     {
-        $this->author = $author;
+        $this->relation = $relation;
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+   
 }

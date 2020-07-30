@@ -33,10 +33,10 @@
 					<div class="col-md-4">
 						<article class="pin bg-white rounted shadow">
 							<div
-								class="mw-100 overflow-hidden">
+								class="mw-100 overflow-hidden rounted-top">
 								<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
 								<a href="{{ path('show',{id: pin.id}) }}">
-									<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 rounted-top"/>
+									<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
 								</div>
 								<h1>
 
@@ -44,7 +44,7 @@
 							</h1>
 
 							<p>{{pin.description|u.truncate(10,'...',false)}}</p>
-							<p>{{pin.createdAt|ago}}</p>
+							<p>{{pin.createdAt|ago}} par {{pin.user.fullName}}</p>
 						</article>
 					</div>
 				{% endfor %}

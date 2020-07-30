@@ -6,11 +6,14 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="users")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -18,6 +21,7 @@ class User
      * @ORM\Column(type="integer")
      */
     private $id;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -28,24 +32,34 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
-
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="json")
      */
-    private $picture;
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $hash;
+    private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Pin::class, mappedBy="author", orphanRemoval=true)
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Pin::class, mappedBy="user", orphanRemoval=true)
      */
     private $pins;
 
@@ -57,6 +71,79 @@ class User
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getFirstName(): ?string
@@ -82,71 +169,77 @@ class User
 
         return $this;
     }
+ 
+public function getCreatedAt(): ?\DateTimeInterface
+{
+    return $this->createdAt;
+}
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
+public function setCreatedAt( \DateTimeInterface $createdAt): self
+{
+    $this->createdAt = $createdAt;
+
+    return $this;
+}
+
+public function getUpdatedAt(): ?\DateTimeInterface
+{
+    return $this->updatedAt;
+}
+
+public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+{
+    $this->updatedAt = $updatedAt;
+
+    return $this;
+}
+ /**
+ * @ORM\PrePersist
+ * @ORM\PreUpdate
+ *
+ **/
+public function updateTimestamps(){
+    if ($this->getCreatedAt() === null){
+        $this->setCreatedAt(new \DateTimeImmutable);
+    }
+   
+    $this->setUpdatedAt(new \DateTimeImmutable); 
+}
+
+/**
+ * @return Collection|Pin[]
+ */
+public function getPins(): Collection
+{
+    return $this->pins;
+}
+
+public function addPin(Pin $pin): self
+{
+    if (!$this->pins->contains($pin)) {
+        $this->pins[] = $pin;
+        $pin->setUser($this);
     }
 
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
+    return $this;
+}
 
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getHash(): ?string
-    {
-        return $this->hash;
-    }
-
-    public function setHash(string $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Pin[]
-     */
-    public function getPins(): Collection
-    {
-        return $this->pins;
-    }
-
-    public function addPin(Pin $pin): self
-    {
-        if (!$this->pins->contains($pin)) {
-            $this->pins[] = $pin;
-            $pin->setAuthor($this);
+public function removePin(Pin $pin): self
+{
+    if ($this->pins->contains($pin)) {
+        $this->pins->removeElement($pin);
+        // set the owning side to null (unless already changed)
+        if ($pin->getUser() === $this) {
+            $pin->setUser(null);
         }
-
-        return $this;
     }
 
-    public function removePin(Pin $pin): self
-    {
-        if ($this->pins->contains($pin)) {
-            $this->pins->removeElement($pin);
-            // set the owning side to null (unless already changed)
-            if ($pin->getAuthor() === $this) {
-                $pin->setAuthor(null);
-            }
-        }
+    return $this;
+}
+ //Raccourci pour afficher le nom et prénom
+ public function getFullName(): string
+ {
+     return $this->getfirstName(). ' ' .$this->getLastName();
+ }
 
-        return $this;
-    }
 }
