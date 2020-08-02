@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\Pin;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PinType extends AbstractType
 {
@@ -25,8 +27,8 @@ class PinType extends AbstractType
            
             
        ])
-            ->add('title')
-            ->add('description')
+            ->add('title', TextType::class)
+            ->add('description', CKEditorType::class)
             
         
         ;
