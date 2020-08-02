@@ -27,7 +27,7 @@
 
 		<!-- Pour chaque lot de 3 créations d'un row -->
 		{% for row in pins|batch(3) %}
-			<div class="row mb-5">
+			<div class="row mb-5 ">
 
 				{% for pin in row %}
 					<div class="col-md-4">
@@ -44,12 +44,22 @@
 							</h1>
 
 							<p>{{pin.description|u.truncate(10,'...',false)}}</p>
-							<p>{{pin.createdAt|ago}} par {{pin.user.fullName}}</p>
+							<p>{{pin.createdAt|ago}}
+							{% trans %}	par {% endtrans %}
+								{{pin.user.fullName}}</p>
 						</article>
 					</div>
 				{% endfor %}
 			{% endfor %}
 		</div>
+		<!-- pagination des pins -->
+		<div class="navigation text-center">
+			{{ knp_pagination_render(
+            pins
+			
+		)}}
+		</div>
+
 	{% else %}
 		<h2 class="text-center">
 			Aucun pin |
@@ -57,5 +67,5 @@
 				Créer le premié pin</a>
 		</h2>
 	{% endif %}
- 
+
 {% endblock %}

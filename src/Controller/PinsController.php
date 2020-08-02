@@ -8,6 +8,7 @@ use App\Form\PinType;
 use App\Repository\PinRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +28,7 @@ class PinsController extends AbstractController
      
      * @Route("/", name="home",methods="GET")
      */
-    public function index(Request $request,EntityManagerInterface $em, PinRepository $pinRepository,UserRepository $userRepository)
+    public function index(Request $request,PaginatorInterface $paginator, EntityManagerInterface $em, PinRepository $pinRepository,UserRepository $userRepository)
     {
      
     //Ajouter un pin manuellement
@@ -38,10 +39,18 @@ class PinsController extends AbstractController
      
      //$em->persist($premier);
      // $em->flush();
-
+     
       
        $pins = $pinRepository->findBy([], ['createdAt' => 'DESC']);
        $user = $userRepository->findAll();
+ 
+
+       $pins = $paginator->paginate(
+           $pins, // On passe les données
+           $request->query->getInt('page', 1),//Numéro de la page en cours
+           2//Nombre d'article par page
+       );
+       
         return $this->render('pins/index.html.twig', [
             'pins' => $pins,
             'user' => $user

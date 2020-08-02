@@ -36,46 +36,52 @@
 								<span class="sr-only">(current)</span>
 							</a>
 							{% if is_granted('ROLE_USER')%}
+							</li>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{path('create')}}">Ajouter un pin</a>
 						</li>
-						{% endif %}
+					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{path('app_login')}}">connexion</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{path('app_logout')}}">deconnexion</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{path('app_register')}}">inscription</a>
+					</li>
+					{% if is_granted('ROLE_ADMIN')%}
 						<li class="nav-item">
-							<a class="nav-link" href="{{path('app_login')}}">connexion</a>
+							<a class="nav-link" href="{{path('admin_utilisateurs')}}">gestion</a>
 						</li>
+					{% endif %}
+					{% if app.user %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{path('app_logout')}}">deconnexion</a>
+							<p class="nav-link form-inline mr-sm-2">
+								Bonjour
+								{{app.user.firstName}}
+							</p>
 						</li>
+					{% endif %}
+					{% for locale in locales if locale != app.request.locale %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{path('app_register')}}">inscription</a>
+							<a class="nav-link" href="{{path('change_locale',{'locale': locale}) }}"><img class="img-en" src="{{asset('flag-translation/'~locale~'.png')}}" alt="{{locale}}">
+							</a>
 						</li>
-						{% if is_granted('ROLE_ADMIN')%}
-							<li class="nav-item">
-								<a class="nav-link" href="{{path('admin_utilisateurs')}}">gestion</a>
-							</li>
-						{% endif %}
-						{% if app.user %}
-							<li class="nav-item">
-							<p class="nav-link form-inline mr-sm-2"> Bonjour {{app.user.firstName}} </p>
-						</li>
-						{% endif %}
-					</ul>
-				</div>
-				<form class="form-inline my-2 my-lg-0">
-					<input class="form-control mr-sm-2" type="text" placeholder="Search">
-					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-				</form>
+					{% endfor %}
+				</ul>
 			</div>
-
-		</nav>
-		<main role="main" class="container"> {% block body %}{% endblock %}
-			</main>
-			{{include('Partials/footer.html.twig') }}
-			{% block javascripts %}
-				<!-- Fichier js webpack encore  -->
-				{{ encore_entry_script_tags('app') }}
-			{% endblock %}
-		</body>
-	</html>
-</body></html>
+			<form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="text" placeholder="Search">
+				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+			</form>
+		</div>
+	</body>
+</html></nav><main role="main" class="container"> {% block body %}{% endblock %}
+</main>
+{{include('Partials/footer.html.twig') }}
+{% block javascripts %}
+	<!-- Fichier js webpack encore  -->
+	{{ encore_entry_script_tags('app') }}
+{% endblock %}</body></html></body></html>
