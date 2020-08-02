@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
+use Symfony\Component;
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="users")
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"email"},message="Un autre utilisateur s'est déjà inscrit avec cette adresse email")
  */
 class User implements UserInterface
 {
@@ -22,16 +25,17 @@ class User implements UserInterface
      */
     private $id;
 
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $firstName;
-
-    /**
+     /**
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
+
+     /** 
+     * @ORM\Column(type="string", length=255)
+     */
+     private $firstName;
+
+
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -48,15 +52,10 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     /**
+     * @ORM\Column(type="boolean")
      */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-     */
-    private $updatedAt;
+    private $isVerified = false;
 
     /**
      * @ORM\OneToMany(targetEntity=Pin::class, mappedBy="user", orphanRemoval=true)
@@ -67,6 +66,9 @@ class User implements UserInterface
     {
         $this->pins = new ArrayCollection();
     }
+ 
+
+     
 
     public function getId(): ?int
     {
@@ -146,100 +148,104 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstName(): ?string
+    /**
+     * Get the value of isVerified
+     */ 
+    public function getIsVerified()
     {
-        return $this->firstName;
+        return $this->isVerified;
     }
 
-    public function setFirstName(string $firstName): self
+    /**
+     * Set the value of isVerified
+     *
+     * @return  self
+     */ 
+    public function setIsVerified($isVerified)
     {
-        $this->firstName = $firstName;
+        $this->isVerified = $isVerified;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+
+    /**
+     * Get the value of lastName
+     */ 
+    public function getLastName()
     {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self
+    /**
+     * Set the value of lastName
+     *
+     * @return  self
+     */ 
+    public function setLastName($lastName)
     {
         $this->lastName = $lastName;
 
         return $this;
     }
- 
-public function getCreatedAt(): ?\DateTimeInterface
-{
-    return $this->createdAt;
-}
 
-public function setCreatedAt( \DateTimeInterface $createdAt): self
-{
-    $this->createdAt = $createdAt;
+     /**
+      * Get the value of firstName
+      */ 
+     public function getFirstName()
+     {
+          return $this->firstName;
+     }
 
-    return $this;
-}
+     /**
+      * Set the value of firstName
+      *
+      * @return  self
+      */ 
+     public function setFirstName($firstName)
+     {
+          $this->firstName = $firstName;
 
-public function getUpdatedAt(): ?\DateTimeInterface
-{
-    return $this->updatedAt;
-}
+          return $this;
+     }
 
-public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-{
-    $this->updatedAt = $updatedAt;
 
-    return $this;
-}
- /**
- * @ORM\PrePersist
- * @ORM\PreUpdate
- *
- **/
-public function updateTimestamps(){
-    if ($this->getCreatedAt() === null){
-        $this->setCreatedAt(new \DateTimeImmutable);
-    }
    
-    $this->setUpdatedAt(new \DateTimeImmutable); 
-}
-
-/**
- * @return Collection|Pin[]
- */
-public function getPins(): Collection
-{
-    return $this->pins;
-}
-
-public function addPin(Pin $pin): self
-{
-    if (!$this->pins->contains($pin)) {
-        $this->pins[] = $pin;
-        $pin->setUser($this);
-    }
-
-    return $this;
-}
-
-public function removePin(Pin $pin): self
-{
-    if ($this->pins->contains($pin)) {
-        $this->pins->removeElement($pin);
-        // set the owning side to null (unless already changed)
-        if ($pin->getUser() === $this) {
-            $pin->setUser(null);
-        }
-    }
-
-    return $this;
-}
- //Raccourci pour afficher le nom et prénom
  public function getFullName(): string
- {
-     return $this->getfirstName(). ' ' .$this->getLastName();
- }
+                      {
+                          return $this->getFirstName(). ' ' .$this->getLastName();
+                      }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|Pin[]
+     */
+    public function getPins(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->pins;
+    }
+
+    public function addPin(Pin $pin): self
+    {
+        if (!$this->pins->contains($pin)) {
+            $this->pins[] = $pin;
+            $pin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePin(Pin $pin): self
+    {
+        if ($this->pins->contains($pin)) {
+            $this->pins->removeElement($pin);
+            // set the owning side to null (unless already changed)
+            if ($pin->getUser() === $this) {
+                $pin->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

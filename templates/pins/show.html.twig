@@ -1,24 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{pin.title}}
+{% block title %}
+	{{pin.title}}
 {% endblock %}
 
 {% block body %}
-<article>
+	<div class="row ">
+		<div class="col-md-6 mx-auto ">
+			<article class="pin bg-white rounted shadow mt-5  ">
+				<div
+					class="mw-100 overflow-hidden rounted-top">
+					<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
+					<a href="{{ path('show',{id: pin.id}) }}">
+						<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
+					</div>
+					<h1>
 
-<h1>{{pin.title}}</h1>
-<p>{{pin.description}}</p>
-<p>Publié le {{pin.createdAt|date('d/m/Y') }}</p>
-<a href="{{path('edit', {id:pin.id}) }}">Editer |</a>
-<!-- suppresion du pin -->
-<a href="#" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();">Supprimer |</a>
-<a href="{{path('home')}}">Retour à la page d'accueil</a>
-<form id="js-form" action="{{path('delete',{id: pin.id}) }}" method="post" style="display:none;">
-<!-- jeton pour éviter la faille csrf lors de la suppresion du pin  -->
-<input type="hidden" name="csrf_token"  value="{{csrf_token('pins.delete' ~ pin.id) }}">
-<input type="hidden" name="_method" value="DELETE">
-</form> 
+						{{pin.title}}</a>
+				</h1>
 
-</article>
+				<p>{{pin.description|u.truncate(10,'...',false)}}</p>
+				<p>
+					<small>
+						<time datetime="{{pin.createdAt|date('d-m-Y H:i:s')}}">{{pin.createdAt|ago}}</p>
+					</small>
 
- {% endblock %}
+				</p>
+				<p>Publié le
+					{{pin.createdAt|date('d/m/Y') }}</p>
+				<div class="pl-3 pb-3">
+					<a href="{{path('edit', {id:pin.id}) }}" class="btn btn-light">Editer
+					</a>
+					<!-- suppresion du pin -->
+					<a href="#" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();" class="btn btn-light">Supprimer</a>
+					<a href="{{path('home')}}" class="btn btn-light">Retour à la page d'accueil</a>
+
+					<form
+						id="js-form" action="{{path('delete',{id: pin.id}) }}" method="post" style="display:none;">
+						<!-- jeton pour éviter la faille csrf lors de la suppresion du pin  -->
+						<input type="hidden" name="csrf_token" value="{{csrf_token('pins.delete' ~ pin.id) }}">
+						<input type="hidden" name="_method" value="DELETE">
+					</form>
+				</div>
+			</article>
+		</div>
+	{% endblock %}

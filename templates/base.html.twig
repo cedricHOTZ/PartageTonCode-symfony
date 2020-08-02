@@ -35,16 +35,26 @@
 							<a class="nav-link" href="{{path('home')}}">Home
 								<span class="sr-only">(current)</span>
 							</a>
+							{% if is_granted('ROLE_USER')%}
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{path('create')}}">Ajouter un pin</a>
 						</li>
+						{% endif %}
 						<li class="nav-item">
-							<a class="nav-link" href="#">Account</a>
+							<a class="nav-link" href="{{path('app_login')}}">connexion</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Logout</a>
+							<a class="nav-link" href="{{path('app_logout')}}">deconnexion</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{path('app_register')}}">inscription</a>
+						</li>
+						{% if is_granted('ROLE_ADMIN')%}
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('admin_utilisateurs')}}">gestion</a>
+							</li>
+						{% endif %}
 					</ul>
 				</div>
 				<form class="form-inline my-2 my-lg-0">

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Pin;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -35,6 +36,7 @@ class PinType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Pin::class,
+           
         ]);
     }
 }

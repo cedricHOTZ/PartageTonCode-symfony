@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}gestions des pins
+{% endblock %}
+
+{% block body %}
+
+
+	<!-- Pour chaque lot de 3 créations d'un row -->
+	<h1 class="mt-5">Liste des pins</h1>
+
+	<table class="table">
+		<thead>
+			<th>ID</th>
+			<th>NOM</th>
+			<th>PRENOM</th>
+			<th>EMAIL</th>
+			<th>ROLES</th>
+			<th>ARTICLES</th>
+			<th>Action</th>
+
+		</thead>
+
+		<tbody>
+			{% for user in users %}
+
+				<tr>
+					<td>{{user.id}}</td>
+					<td>{{user.lastName}}</td>
+					<td>{{user.firstName}}</td>
+					<td>{{user.email}}</td>
+					<td>
+						{% for role in user.roles %}
+							{% if role == "ROLE_USER" %}
+								Utilisateur
+							{% elseif role == "ROLE_EDITOR" %}
+								Editeur
+							{% elseif role == "ROLE_ADMIN" %}
+								Administrateur
+							{% endif %}
+						{% endfor %}
+					</td>
+					<td>{{user.pins|length}}</td>
+				<td><a href="{{path('admin_modifier_utilisateur', {'id': user.id})}}" class="btn btn-primary">modifier</a></td>
+				</tr>
+
+			{% else %}
+				<tr>
+					<p>Aucun utilisateur
+					</p>
+				</tr>
+			{% endfor %}
+		</tbody>
+
+	</table>
+
+
+{% endblock %}

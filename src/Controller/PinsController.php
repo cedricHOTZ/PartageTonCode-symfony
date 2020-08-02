@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Pin;
+use App\Entity\User;
 use App\Form\PinType;
 use App\Repository\PinRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +27,7 @@ class PinsController extends AbstractController
      
      * @Route("/", name="home",methods="GET")
      */
-    public function index(EntityManagerInterface $em, PinRepository $pinRepository)
+    public function index(Request $request,EntityManagerInterface $em, PinRepository $pinRepository,UserRepository $userRepository)
     {
      
     //Ajouter un pin manuellement
@@ -39,8 +41,10 @@ class PinsController extends AbstractController
 
       
        $pins = $pinRepository->findBy([], ['createdAt' => 'DESC']);
+       $user = $userRepository->findAll();
         return $this->render('pins/index.html.twig', [
-            'pins' => $pins
+            'pins' => $pins,
+            'user' => $user
         ]);
     }
 
@@ -93,7 +97,9 @@ class PinsController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $pin = new Pin;
+        
      $form = $this->createForm(PinType::class, $pin);
+     
     //Plus besoin si on passe par la création du form avec createform et non createFormBuilder
     // ->add('title', TextType::class)
     //->add('description', TextareaType::class)
@@ -102,7 +108,8 @@ class PinsController extends AbstractController
 
     $form->handleRequest($request);
     if( $form->isSubmitted() && $form->isValid()){
-      
+        $user = $this->getUser();
+      $pin->setUser($user);
         //$pin = $form->getData();
       
         // pour récupérer entité manager si pas d'injection de dépendance
@@ -130,6 +137,7 @@ class PinsController extends AbstractController
         if($this->isCsrfTokenValid('pins.delete'. $pin->getId(),$request->request->get('csrf_token'))){
             $em->remove($pin);
             $em->flush();
+            $this->addFlash('success','Pin supprimé success');
         }
    
            
