@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\EditUserType;
 use App\Repository\PinRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,4 +55,22 @@ class AdminController extends AbstractController
             'userForm' => $form->createView()
         ]);
      }
+
+     /**
+      * Supprimer un utilisateur
+      * @Route("/utilisateurs/delete/{id}",name="delete_utilisateur",methods="DELETE")
+      */
+
+      public function deleteUser(Request $request,User $user){
+       
+      if($this->isCsrfTokenValid('delete' .$user->getId(), $request->request->get('_token'))){
+        $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->remove($user);
+      $entityManager->flush();
+      $this->addFlash('success','Utilisateur supprimé');
+      }
+       
+
+        return $this->redirectToRoute('admin_utilisateurs');
+      }
 }

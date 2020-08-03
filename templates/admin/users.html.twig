@@ -42,6 +42,13 @@
 					</td>
 					<td>{{user.pins|length}}</td>
 				<td><a href="{{path('admin_modifier_utilisateur', {'id': user.id})}}" class="btn btn-primary">modifier</a></td>
+			  <td>
+				<form method="Post" action="{{path('admin_delete_utilisateur', {'id': user.id})}}"style="display:inline-block" onsubmit="return confirm('Êtes vous sur!')">
+				<input type="hidden" name="_method" value="DELETE">
+					<input type="hidden" name="_token" value="{{csrf_token('delete' ~ user.id)}}">
+					<button class="btn btn-danger">Supprimer</button>
+         </form>
+				 </td>
 				</tr>
 
 			{% else %}
