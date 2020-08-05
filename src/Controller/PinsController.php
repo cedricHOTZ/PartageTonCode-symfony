@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Pin;
 use App\Entity\User;
 use App\Form\PinType;
+use App\Form\SearchPinType;
 use App\Repository\PinRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +27,7 @@ class PinsController extends AbstractController
     }
     /**
      
-     * @Route("/", name="home",methods="GET")
+     * @Route("/", name="home",methods="GET|POST")
      */
     public function index(Request $request,PaginatorInterface $paginator, EntityManagerInterface $em, PinRepository $pinRepository,UserRepository $userRepository)
     {
@@ -41,19 +42,29 @@ class PinsController extends AbstractController
      // $em->flush();
      
       
+    
        $pins = $pinRepository->findBy([], ['createdAt' => 'DESC']);
        $user = $userRepository->findAll();
  
+  // Search
+  $form = $this->createForm(SearchPinType::class);
+  $search = $form->handleRequest($request);
 
+  if($form->isSubmitted() && $form->isValid()){
+      //on recherche les annonces correspondant aux mots-clés
+      $pins = $pinRepository->search($search->get('mots')
+      ->getData());
+  }
        $pins = $paginator->paginate(
            $pins, // On passe les données
            $request->query->getInt('page', 1),//Numéro de la page en cours
            2//Nombre d'article par page
        );
-       
+      
         return $this->render('pins/index.html.twig', [
             'pins' => $pins,
-            'user' => $user
+            'user' => $user,
+            'form' =>$form->createView()
         ]);
     }
 

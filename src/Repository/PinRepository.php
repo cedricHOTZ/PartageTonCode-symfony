@@ -19,6 +19,23 @@ class PinRepository extends ServiceEntityRepository
         parent::__construct($registry, Pin::class);
     }
 
+    /* searchbar/
+    /**
+     * recherche les annonces en fonction du formulaire
+     */
+
+    public function search($mots)
+    {
+        $query = $this->createQueryBuilder('p');
+       
+        if ($mots != null) {
+            $query->andWhere('MATCH_AGAINST(p.title, p.description) AGAINST
+            (:mots boolean)>0')
+                ->setParameter('mots', $mots);
+        }
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Pin[] Returns an array of Pin objects
     //  */

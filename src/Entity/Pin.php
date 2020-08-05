@@ -11,7 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity(repositoryClass=PinRepository::class)
  * @ORM\HasLifecycleCallbacks
- * ORM\Table(name="pin")
+ * @ORM\Table(name="pin", indexes={@ORM\Index(columns={"title", "description"}, flags={"fulltext"})})
  * @Vich\Uploadable
  */
 class Pin
@@ -68,7 +68,7 @@ class Pin
      */
     private $user;
 
-    
+    private $mots;
 
 
     public function getId(): ?int
@@ -186,4 +186,24 @@ class Pin
   
 
    
+
+    /**
+     * Get the value of mots
+     */ 
+    public function getMots()
+    {
+        return $this->mots;
+    }
+
+    /**
+     * Set the value of mots
+     *
+     * @return  self
+     */ 
+    public function setMots($mots)
+    {
+        $this->mots = $mots;
+
+        return $this;
+    }
 }
