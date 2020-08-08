@@ -9,15 +9,15 @@
 	<div class="container">
 
 		{{ form(form) }}
-		</div>
-
+</div>
+		
 
 		{% if pins|length > 0 %}
 			<h1
 				class="mb-4 text-center text-muted">
 
 				<!-- affiche le singulier ou pluriel de pin -->
-				{{ function_name(pins|length, 'pin', 'pins')}}</h1>
+				{{ function_name(pins|length, 'article', 'articles')}}</h1>
 
 
 			<!-- Pour chaque lot de 3 créations d'un row -->
@@ -38,7 +38,8 @@
 										{{pin.title}}</a>
 								</h1>
 
-								<p>{{pin.description|striptags|u.truncate(70,'...',false)|raw}}</p>
+								<p>{{pin.description|striptags|u.truncate(20,'....',true)|raw}}</p>
+								 <a href="{{path('show', {'slug': pin.slug}) }}" class="btn btn-primary">Lire l'article</a>
 								<p>{{pin.createdAt|ago}}
 									{% trans %}
 									par

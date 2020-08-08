@@ -11,37 +11,43 @@
 				<div
 					class="mw-100 overflow-hidden rounted-top">
 					<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
-				
-						<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
-					</div>
-					<h1>
 
-						{{pin.title}}</a>
-				</h1>
+					<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
+				</div>
+				<h1>
 
-				<p>{{pin.description|striptags|raw}}</p>
-				<p>
-					<small>
-						<time datetime="{{pin.createdAt|date('d-m-Y H:i:s')}}">{{pin.createdAt|ago}}</p>
-					</small>
+					{{pin.title}}</a>
+			</h1>
 
-				</p>
-				<p>Publié le
-					{{pin.createdAt|date('d/m/Y') }}</p>
+			<p>{{pin.description|raw}}</p>
+			<p>
+				<small>
+					<time datetime="{{pin.createdAt|date('d-m-Y H:i:s')}}">{{pin.createdAt|ago}}</p>
+				</small>
+
+			</p>
+			<p>Publié le
+				{{pin.createdAt|date('d/m/Y') }}</p>
+
+       <!-- Si l'utilisateur est l'auteur de l'article il peut modifier ou supprimer son annonce -->
+			{% if app.user and app.user == pin.user %}
+			 <!-- Modification de l'article -->
 				<div class="pl-3 pb-3">
-					<a href="{{path('edit', {id:pin.id}) }}" class="btn btn-light">Editer
+					<a href="{{path('edit', {'slug': pin.slug}) }}" class="btn btn-light">Editer
 					</a>
 					<!-- suppresion du pin -->
-					<a href="#" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();" class="btn btn-light">Supprimer</a>
-					<a href="{{path('home')}}" class="btn btn-light">Retour à la page d'accueil</a>
 
-					<form
-						id="js-form" action="{{path('delete',{id: pin.id}) }}" method="post" style="display:none;">
-						<!-- jeton pour éviter la faille csrf lors de la suppresion du pin  -->
-						<input type="hidden" name="csrf_token" value="{{csrf_token('pins.delete' ~ pin.id) }}">
-						<input type="hidden" name="_method" value="DELETE">
-					</form>
-				</div>
-			</article>
-		</div>
-	{% endblock %}
+					<a href="{{path('delete', {'slug': pin.slug}) }}" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();" class="btn btn-light">Supprimer</a>
+				{% endif %}
+				<a href="{{path('home')}}" class="btn btn-light">Retour à la page d'accueil</a>
+
+				<form
+					id="js-form" action="{{path('delete',{'slug': pin.slug}) }}" method="post" style="display:none;">
+					<!-- jeton pour éviter la faille csrf lors de la suppresion du pin  -->
+					<input type="hidden" name="csrf_token" value="{{csrf_token('pins.delete' ~ pin.id) }}">
+					<input type="hidden" name="_method" value="DELETE">
+				</form>
+			</div>
+		</article>
+	</div>
+{% endblock %}
