@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PinRepository;
 use Doctrine\ORM\Mapping as ORM;
+
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -37,7 +39,7 @@ class Pin
      */
     private $description;
 
-     /**
+    /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      * 
      * @Vich\UploadableField(mapping="pin_image", fileNameProperty="imageName")
@@ -69,6 +71,12 @@ class Pin
     private $user;
 
     private $mots;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $slug;
 
 
     public function getId(): ?int
@@ -123,20 +131,21 @@ class Pin
 
         return $this;
     }
-/**
- * @ORM\PrePersist
- * @ORM\PreUpdate
- *
- **/
-    public function updateTimestamps(){
-        if ($this->getCreatedAt() === null){
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     **/
+    public function updateTimestamps()
+    {
+        if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTimeImmutable);
         }
-       
-        $this->setUpdatedAt(new \DateTimeImmutable); 
+
+        $this->setUpdatedAt(new \DateTimeImmutable);
     }
-    
-     /*
+
+    /*
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
@@ -155,7 +164,7 @@ class Pin
         return $this->imageFile;
     }
 
-   
+
 
     public function getImageName(): ?string
     {
@@ -181,15 +190,15 @@ class Pin
         return $this;
     }
 
-    
 
-  
 
-   
+
+
+
 
     /**
      * Get the value of mots
-     */ 
+     */
     public function getMots()
     {
         return $this->mots;
@@ -199,10 +208,22 @@ class Pin
      * Set the value of mots
      *
      * @return  self
-     */ 
+     */
     public function setMots($mots)
     {
         $this->mots = $mots;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

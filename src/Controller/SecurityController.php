@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Symfony\Component\BrowserKit\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +18,7 @@ class SecurityController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
-        
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -30,13 +30,15 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logout", name="app_logout")
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        //$this->addFlash('success','vous êtes déconnecté');
-        $this->addFlash('success','vous êtes déconnecté');
+        
+
         return $this->redirectToRoute('home');
-      //  throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-        
-        
+        $this->addFlash('error', 'vous êtes déconnecté');
+
+        //    throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+
+
     }
 }

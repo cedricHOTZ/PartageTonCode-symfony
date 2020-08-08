@@ -67,6 +67,7 @@ class AdminController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
       $entityManager->remove($user);
       $entityManager->flush();
+      
       $this->addFlash('success','Utilisateur supprimé');
       }
        

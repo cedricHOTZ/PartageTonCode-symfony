@@ -5,58 +5,61 @@
 
 {% block body %}
 
-</style>
+	<!-- searchbar -->
+	<div class="container">
 
-{{ form(form) }}
-	{% if pins|length > 0 %}
-		<h1
-			class="mb-4 text-center text-muted">
-
-			<!-- affiche le singulier ou pluriel de pin -->
-			{{ function_name(pins|length, 'pin', 'pins')}}</h1>
-
-		<!-- searchbar -->
+		{{ form(form) }}
+		</div>
 
 
-		<!-- Pour chaque lot de 3 créations d'un row -->
-		{% for row in pins|batch(3) %}
-			<div class="row mb-5 ">
+		{% if pins|length > 0 %}
+			<h1
+				class="mb-4 text-center text-muted">
 
-				{% for pin in row %}
-					<div class="col-md-4">
-						<article class="pin bg-white rounted shadow">
-							<div
-								class="mw-100 overflow-hidden rounted-top">
-								<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
-								<a href="{{ path('show',{id: pin.id}) }}">
-									<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
-								</div>
-								<h1>
+				<!-- affiche le singulier ou pluriel de pin -->
+				{{ function_name(pins|length, 'pin', 'pins')}}</h1>
 
-									{{pin.title}}</a>
-							</h1>
 
-							<p>{{pin.description|striptags|u.truncate(10,'...',false)|raw}}</p>
-							<p>{{pin.createdAt|ago}}
-								{% trans %}
-								par
-								{% endtrans %}
-								{{pin.user.fullName}}</p>
-						</article>
-					</div>
-				{% endfor %}
+			<!-- Pour chaque lot de 3 créations d'un row -->
+			{% for row in pins|batch(3) %}
+				<div class="row mb-5 ">
+
+					{% for pin in row %}
+						<div class="col-md-4">
+							<article class="pin bg-white rounted shadow">
+								<div
+									class="mw-100 overflow-hidden rounted-top">
+									<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
+									<a href="{{ path('show',{'slug': pin.slug}) }}">
+										<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
+									</div>
+									<h1>
+
+										{{pin.title}}</a>
+								</h1>
+
+								<p>{{pin.description|striptags|u.truncate(70,'...',false)|raw}}</p>
+								<p>{{pin.createdAt|ago}}
+									{% trans %}
+									par
+									{% endtrans %}
+									{{pin.user.fullName}}</p>
+							</article>
+						</div>
+					{% endfor %}
+				</div>
 			{% endfor %}
-		</div>
-		<!-- pagination des pins -->
-		<div class="navigation">
-			{{ knp_pagination_render(pins)}}
-		</div>
 
-	{% else %}
-		<h2 class="text-center">
-			Aucun pin |
-			<a href="{{path('create') }}">
-				Créer le premié pin</a>
-		</h2>
-	{% endif %}
-	{{ form(form) }}{% endblock %}
+			<!-- pagination des pins -->
+			<div class="navigation text-center">
+				{{ knp_pagination_render(pins)}}
+			</div>
+
+		{% else %}
+			<h2 class="text-center">
+				Aucun pin |
+				<a href="{{path('create') }}">
+					Créer le premié pin</a>
+			</h2>
+		{% endif %}
+		{{ form(form) }}{% endblock %}

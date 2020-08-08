@@ -16,12 +16,17 @@ class SearchPinType extends AbstractType
         $builder
             ->add('mots', SearchType::class, [
                 'label' => false,
+                'required' => false,
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mt-5 searchbar ',
                     'placeholder' => 'Entrez un ou plusieurs mots-clés'
                 ]
             ])
-            ->add('Recherchez', SubmitType::class);
+            ->add('Recherchez', SubmitType::class,[
+                'attr' => [
+                    'class' => ''
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

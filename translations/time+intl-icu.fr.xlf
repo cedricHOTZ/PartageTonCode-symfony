@@ -6,8 +6,8 @@
     </header>
     <body>
       <trans-unit id="M4RAXb_" resname="diff.empty">
-        <source>diff.empty</source>
-        <target>__diff.empty</target>
+        <source></source>
+        <target></target>
       </trans-unit>
     </body>
   </file>

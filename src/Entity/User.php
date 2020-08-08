@@ -25,15 +25,15 @@ class User implements UserInterface
      */
     private $id;
 
-     /**
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
 
-     /** 
+    /** 
      * @ORM\Column(type="string", length=255)
      */
-     private $firstName;
+    private $firstName;
 
 
     /**
@@ -52,10 +52,13 @@ class User implements UserInterface
      */
     private $password;
 
-     /**
+    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+
+
 
     /**
      * @ORM\OneToMany(targetEntity=Pin::class, mappedBy="user", orphanRemoval=true)
@@ -66,9 +69,9 @@ class User implements UserInterface
     {
         $this->pins = new ArrayCollection();
     }
- 
 
-     
+
+
 
     public function getId(): ?int
     {
@@ -150,7 +153,7 @@ class User implements UserInterface
 
     /**
      * Get the value of isVerified
-     */ 
+     */
     public function getIsVerified()
     {
         return $this->isVerified;
@@ -160,7 +163,7 @@ class User implements UserInterface
      * Set the value of isVerified
      *
      * @return  self
-     */ 
+     */
     public function setIsVerified($isVerified)
     {
         $this->isVerified = $isVerified;
@@ -171,7 +174,7 @@ class User implements UserInterface
 
     /**
      * Get the value of lastName
-     */ 
+     */
     public function getLastName()
     {
         return $this->lastName;
@@ -181,7 +184,7 @@ class User implements UserInterface
      * Set the value of lastName
      *
      * @return  self
-     */ 
+     */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
@@ -189,32 +192,32 @@ class User implements UserInterface
         return $this;
     }
 
-     /**
-      * Get the value of firstName
-      */ 
-     public function getFirstName()
-     {
-          return $this->firstName;
-     }
+    /**
+     * Get the value of firstName
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
 
-     /**
-      * Set the value of firstName
-      *
-      * @return  self
-      */ 
-     public function setFirstName($firstName)
-     {
-          $this->firstName = $firstName;
+    /**
+     * Set the value of firstName
+     *
+     * @return  self
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
 
-          return $this;
-     }
+        return $this;
+    }
 
 
-   
- public function getFullName(): string
-                      {
-                          return $this->getFirstName(). ' ' .$this->getLastName();
-                      }
+
+    public function getFullName(): string
+    {
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
 
     /**
      * @return \Doctrine\Common\Collections\Collection|Pin[]
@@ -247,5 +250,6 @@ class User implements UserInterface
         return $this;
     }
 
-   
+
+    
 }

@@ -24,16 +24,13 @@ class PinRepository extends ServiceEntityRepository
      * recherche les annonces en fonction du formulaire
      */
 
-    public function search($mots)
-    {
-        $query = $this->createQueryBuilder('p');
-       
-        if ($mots != null) {
-            $query->andWhere('MATCH_AGAINST(p.title, p.description) AGAINST
-            (:mots boolean)>0')
-                ->setParameter('mots', $mots);
-        }
-        return $query->getQuery()->getResult();
+    public function search($title) {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.title LIKE :title')
+            ->setParameter('title', '%'.$title.'%')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->execute();
     }
 
     // /**

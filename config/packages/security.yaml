@@ -21,15 +21,14 @@ security:
                 authenticators:
                     - App\Security\LoginFormAuthentificatorAuthenticator
             logout:
-                path: app_logout
+                path: /logout
+                target: /
                
-               
-                
 
             form_login:
                 login_path: app_login
                 check_path: app_login
-
+           
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
             # https://symfony.com/doc/current/security/impersonating_user.html
@@ -40,6 +39,7 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
     role_hierarchy:
         ROLE_EDITOR: ROLE_USER

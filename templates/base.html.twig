@@ -8,7 +8,7 @@
 
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Pinterest
+			{% block title %}PartageTon-code
 			{% endblock %}
 		</title>
 		{% block stylesheets %}
@@ -18,12 +18,18 @@
 
 	</head>
 	<body>
+		{% for message in app.flashes('error') %}
+			<div role="alert" class="alert alert-{{type}}">
+				{{ message }}
+			</div>
+		{% endfor %}
+
 		<!--  Affichage des messages flash -->
 		{{include('Partials/flash_messages.html.twig') }}
 
 		<nav class=" navbar navbar-expand-lg navbar-dark bg-primary">
 
-			<a class="navbar-brand" href="{{path('home')}}">Pinterest</a>
+			<a class="navbar-brand" href="{{path('home')}}">PartageTon-code</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -56,26 +62,33 @@
 							<a class="nav-link" href="{{path('admin_utilisateurs')}}">gestion</a>
 						</li>
 					{% endif %}
+
+
+				</ul>
+			
+			<form class="form-inline ">
+				<ul>
 					{% if app.user %}
 						<li class="nav-item">
-							<p class="nav-link form-inline mr-sm-2">
+							<p class="nav-link ">
 								Bonjour
 								{{app.user.firstName}}
 							</p>
+
 						</li>
+
+
 					{% endif %}
+					<!--  Changement de langue -->
 					{% for locale in locales if locale != app.request.locale %}
 						<li class="nav-item">
 							<a class="nav-link" href="{{path('change_locale',{'locale': locale}) }}"><img class="img-en" src="{{asset('flag-translation/'~locale~'.png')}}" alt="{{locale}}">
 							</a>
 						</li>
-					{% endfor %}
-				</ul>
-			</div>
-			<form class="form-inline my-2 my-lg-0">
-				<input class="form-control mr-sm-2" type="text" placeholder="Search">
-				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+					</ul>
+				{% endfor %}
 			</form>
+			</div>
 		</div>
 	</body>
 </html></nav><main role="main" class="container"> {% block body %}{% endblock %}
