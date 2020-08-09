@@ -78,6 +78,13 @@ class Pin
      */
     private $slug;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="pins")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="La categorie est requise")
+     */
+    private $category;
+
 
     public function getId(): ?int
     {
@@ -224,6 +231,27 @@ class Pin
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set the value of category
+     *
+     * @return  self
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -65,6 +65,17 @@ class User implements UserInterface
      */
     private $pins;
 
+    /**
+     * @ORM\Column(type="string", name="facebook_id", nullable=true)
+     */
+    protected $facebookId;
+
+    /**
+     * @ORM\Column(type="string", name="google_id", nullable=true)
+     */
+    protected $googleId;
+
+
     public function __construct()
     {
         $this->pins = new ArrayCollection();
@@ -252,4 +263,44 @@ class User implements UserInterface
 
 
     
+
+    /**
+     * Get the value of facebookId
+     */ 
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * Set the value of facebookId
+     *
+     * @return  self
+     */ 
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of googleId
+     */ 
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * Set the value of googleId
+     *
+     * @return  self
+     */ 
+    public function setGoogleId($googleId)
+    {
+        $this->googleId = $googleId;
+
+        return $this;
+    }
 }
