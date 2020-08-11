@@ -9,8 +9,8 @@
 	<div class="container">
 
 		{{ form(form) }}
-</div>
-		
+		</div>
+
 
 		{% if pins|length > 0 %}
 			<h1
@@ -19,19 +19,22 @@
 				<!-- affiche le singulier ou pluriel de pin -->
 				{{ function_name(pins|length, 'article', 'articles')}}</h1>
 
+			{% for categorie in category  %}
 
-			<!-- Pour chaque lot de 3 créations d'un row -->
-			{% for row in pins|batch(3) %}
+				<h1>{{categorie.name }}</h1>
+
 				<div class="row mb-5 ">
+					{% for pin in categorie.pins %}
 
-					{% for pin in row %}
 						<div class="col-md-4">
+
 							<article class="pin bg-white rounted shadow">
 								<div
 									class="mw-100 overflow-hidden rounted-top">
+
 									<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
 									<a href="{{ path('show',{'slug': pin.slug}) }}">
-										<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
+										<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/symfony.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
 									</div>
 									<h1>
 
@@ -39,17 +42,26 @@
 								</h1>
 
 								<p>{{pin.description|striptags|u.truncate(20,'....',true)|raw}}</p>
-								 <a href="{{path('show', {'slug': pin.slug}) }}" class="btn btn-primary">Lire l'article</a>
+								<a href="{{path('show', {'slug': pin.slug}) }}" class="btn btn-primary">Lire l'article</a>
+								<h3>
+									<span class="badge badge-success">{{pin.category.name}}</span>
+								</h3>
 								<p>{{pin.createdAt|ago}}
 									{% trans %}
 									par
 									{% endtrans %}
 									{{pin.user.fullName}}</p>
+
 							</article>
+
 						</div>
 					{% endfor %}
 				</div>
 			{% endfor %}
+
+
+			<!-- Pour chaque lot de 3 créations d'un row -->
+
 
 			<!-- pagination des pins -->
 			<div class="navigation text-center">
