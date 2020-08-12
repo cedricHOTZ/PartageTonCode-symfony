@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +19,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request,TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthentificatorAuthenticator $authenticator): Response
+    public function register(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthentificatorAuthenticator $authenticator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -30,17 +31,19 @@ class RegistrationController extends AbstractController
                 $passwordEncoder->encodePassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                    
+
                 )
-                
+
             );
+            // On génère le token d'activation
+            $user->setActivationToken(md5(uniqid()));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            
+
             $message = $translator->trans('Votre compte est activé');
-            $this->addFlash('success',$message);
+            $this->addFlash('success', 'Votre compte utilisateur est activé');
             // do anything else you need here, like send an email
             //
             return $guardHandler->authenticateUserAndHandleSuccess(
@@ -49,11 +52,39 @@ class RegistrationController extends AbstractController
                 $authenticator,
                 'main' // firewall name in security.yaml
             );
-           
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+    /**
+     * @Route("/activation/{token}", name="activation")
+     *
+     * 
+     */
+    public function activation($token, UserRepository $userRepository)
+    {
+        // On vérifie si un utilisateur a ce token
+        $user = $userRepository->findOneBy(['activation_token' => $token]);
+
+        //Si aucun utilisateur n'existe avec ce token
+        if (!$user) {
+            throw $this->createNotFoundException('Cet utilisateur n\'existe pas');
+        }
+
+        // On supprime le token
+
+        $user->setActivationToken(null);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        //On envoi un message addFlash
+        $this->addflash('message', 'Vous avez bien activé votre compte');
+
+        // On retourne à l'accueil
+
+        return $this->redirectToRoute('home');
     }
 }
