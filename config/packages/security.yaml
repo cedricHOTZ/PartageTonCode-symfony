@@ -23,12 +23,14 @@ security:
             logout:
                 path: /logout
                 target: /
-               
 
             form_login:
                 login_path: app_login
                 check_path: app_login
-           
+            
+            remember_me:
+                secret: '%kernel.secret%'
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
             # https://symfony.com/doc/current/security/impersonating_user.html
