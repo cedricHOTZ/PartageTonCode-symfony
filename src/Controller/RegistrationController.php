@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
                 );
             // On envoie l'email
             $mailer->send($message);
-            $this->addFlash('success', 'Votre compte utilisateur est activé');
+            $this->addFlash('success', 'Merci de valider votre email pour activer votre compte');
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
@@ -104,7 +104,7 @@ class RegistrationController extends AbstractController
         $entityManager->flush();
 
         //On envoi un message addFlash
-        $this->addflash('message', 'Vous avez bien activé votre compte');
+        $this->addflash('success', 'Vous avez bien activé votre compte');
 
         // On retourne à l'accueil
 
