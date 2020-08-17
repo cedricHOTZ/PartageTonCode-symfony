@@ -23,7 +23,8 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-
+            // Affiche un message si l'utilisateur essaye de se connecter alor qu'il est déjà connecté
+            $this->addFlash('error', 'Vous êtes déjà connecté');
             return $this->redirectToRoute('home');
         }
 
