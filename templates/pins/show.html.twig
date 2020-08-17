@@ -5,21 +5,21 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row ">
+	<div class="row showarticle ">
 		<div class="col-md-6 mx-auto ">
 			<article class="pin bg-white rounted shadow mt-5  ">
 				<div
 					class="mw-100 overflow-hidden rounted-top">
 					<!-- Si image.name n'est pas null on va prendre l'image en question sinon on prend l'image par default dans le dossié image/placeholder.jpg -->
 
-					<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/placeholder.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
+					<img src="{{ (pin.imageName ? vich_uploader_asset(pin) : asset('build/images/symfony.jpg'))|imagine_filter('square_thumbnail_medium')}}" alt="{{pin.title}}" class=" w-100 "/>
 				</div>
-				<h1>
+				<h1 class="text-center">
 
 					{{pin.title}}</a>
 			</h1>
 
-			<p>{{pin.description|raw}}</p>
+			<p class="text-break">{{pin.description|raw}}</p>
 			<p>
 				<small>
 					<time datetime="{{pin.createdAt|date('d-m-Y H:i:s')}}">{{pin.createdAt|ago}}</p>
@@ -33,11 +33,11 @@
 			{% if app.user and app.user == pin.user %}
 			 <!-- Modification de l'article -->
 				<div class="pl-3 pb-3">
-					<a href="{{path('edit', {'slug': pin.slug}) }}" class="btn btn-light">Editer
+					<a href="{{path('edit', {'slug': pin.slug}) }}" class="btn btn-warning">Editer
 					</a>
 					<!-- suppresion du pin -->
 
-					<a href="{{path('delete', {'slug': pin.slug}) }}" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();" class="btn btn-light">Supprimer</a>
+					<a href="{{path('delete', {'slug': pin.slug}) }}" onclick="event.preventDefault(); confirm('Etes vous sûr') && document.getElementById('js-form').submit();" class="btn btn-danger">Supprimer</a>
 				{% endif %}
 				<a href="{{path('home')}}" class="btn btn-light">Retour à la page d'accueil</a>
 
