@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -23,52 +24,49 @@ class RegistrationFormType extends AbstractType
             ->add('lastName', TextType::class, [
                 'label' => 'Nom'
             ])
-            ->add('firstName', TextType::class,[
+            ->add('firstName', TextType::class, [
                 'label' => 'Prénom'
             ])
             ->add('roles', ChoiceType::class, [
-                'choices' =>[
+                'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Editeur' => 'ROLE_EDITOR',
-                    'Modérateur' =>'ROLE_MODO',
+                    'Modérateur' => 'ROLE_MODO',
                     'Administrateur' => 'ROLE_ADMIN'
                 ],
                 'expanded' => true,
-                'multiple' =>true,
+                'multiple' => true,
                 'label' => 'Rôles'
             ])
-            ->add('email', EmailType::class,[
+            ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de saisir votre adresse email'
                     ])
-                    ],
+                ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'label' => 'J\'accepte de partager mon code',
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'validation du formulaire',
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
-        ;
+           
+
+            ->add('Password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les mots de passe ne sont',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe'],
+               
+            ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver)

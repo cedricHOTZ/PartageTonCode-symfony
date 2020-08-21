@@ -19,16 +19,22 @@
 			{{ form_row(registrationForm.firstName) }}
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-6">
+	<div class="row ">
+		<div class="col-md-12">
 			{{ form_row(registrationForm.email) }}
 		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">
-			{{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
+			{{ form_row(registrationForm.Password.first) }}
+
+		</div>
+
+		<div class="col-md-6">
+			{{ form_row(registrationForm.Password.second) }}
 		</div>
 	</div>
+
 	{{ form_row(registrationForm.roles) }}
 	{{ form_row(registrationForm.agreeTerms) }}
 
