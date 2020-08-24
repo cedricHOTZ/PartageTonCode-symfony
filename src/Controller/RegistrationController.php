@@ -69,12 +69,13 @@ class RegistrationController extends AbstractController
             $mailer->send($message);
             $this->addFlash('success', 'Merci de valider votre email pour activer votre compte');
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            // si on veut tout de suite connecté l'utilisateur sans passer par la vérif de l'adresse mail
+            // return $guardHandler->authenticateUserAndHandleSuccess(
+            //     $user,
+            //   $request,
+            //     $authenticator,
+            //    'main' // firewall name in security.yaml
+            //);
         }
 
         return $this->render('registration/register.html.twig', [
@@ -86,7 +87,7 @@ class RegistrationController extends AbstractController
      *
      * 
      */
-    public function activation($token, UserRepository $userRepository)
+    public function activation($token, UserRepository $userRepository, Request $request, GuardAuthenticatorHandler $guardHandler, LoginFormAuthentificatorAuthenticator $authenticator)
     {
         // On vérifie si un utilisateur a ce token
         $user = $userRepository->findOneBy(['activation_token' => $token]);
@@ -106,6 +107,13 @@ class RegistrationController extends AbstractController
         //On envoi un message addFlash
         $this->addflash('success', 'Vous avez bien activé votre compte');
 
+        // Connecte l'utilisateur apres la validation de l'adresse mail
+        return $guardHandler->authenticateUserAndHandleSuccess(
+            $user,
+            $request,
+            $authenticator,
+            'main' // firewall name in security.yaml
+        );
         // On retourne à l'accueil
 
         return $this->redirectToRoute('home');
